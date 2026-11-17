@@ -45,6 +45,14 @@ export type ScannedRoutes = {
     'event_artists.store': { paramsTuple: [ParamValue]; params: {'eventId': ParamValue} }
     'event_artists.update': { paramsTuple: [ParamValue]; params: {'eventArtistId': ParamValue} }
     'event_artists.destroy': { paramsTuple: [ParamValue]; params: {'eventArtistId': ParamValue} }
+    'genres.index': { paramsTuple?: []; params?: {} }
+    'genres.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'notifications.index': { paramsTuple?: []; params?: {} }
+    'notifications.unread_count': { paramsTuple?: []; params?: {} }
+    'notifications.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'notifications.mark_as_read': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'notifications.mark_all_as_read': { paramsTuple?: []; params?: {} }
+    'notifications.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -62,6 +70,11 @@ export type ScannedRoutes = {
     'venues.index': { paramsTuple?: []; params?: {} }
     'venues.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'event_artists.index': { paramsTuple: [ParamValue]; params: {'eventId': ParamValue} }
+    'genres.index': { paramsTuple?: []; params?: {} }
+    'genres.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'notifications.index': { paramsTuple?: []; params?: {} }
+    'notifications.unread_count': { paramsTuple?: []; params?: {} }
+    'notifications.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -79,6 +92,11 @@ export type ScannedRoutes = {
     'venues.index': { paramsTuple?: []; params?: {} }
     'venues.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'event_artists.index': { paramsTuple: [ParamValue]; params: {'eventId': ParamValue} }
+    'genres.index': { paramsTuple?: []; params?: {} }
+    'genres.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'notifications.index': { paramsTuple?: []; params?: {} }
+    'notifications.unread_count': { paramsTuple?: []; params?: {} }
+    'notifications.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
@@ -110,9 +128,12 @@ export type ScannedRoutes = {
     'post_medias.destroy': { paramsTuple: [ParamValue]; params: {'mediaId': ParamValue} }
     'venues.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'event_artists.destroy': { paramsTuple: [ParamValue]; params: {'eventArtistId': ParamValue} }
+    'notifications.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PATCH: {
     'events.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'notifications.mark_as_read': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'notifications.mark_all_as_read': { paramsTuple?: []; params?: {} }
   }
 }
 declare module '@adonisjs/core/types/http' {

@@ -254,6 +254,54 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"event-artists"],[1,"eventArtistId"]],
     types: placeholder as Registry['event_artists.destroy']['types'],
   },
+  'genres.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/genres',
+    tokens: [[0,"api"],[0,"v1"],[0,"genres"]],
+    types: placeholder as Registry['genres.index']['types'],
+  },
+  'genres.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/genres/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"genres"],[1,"id"]],
+    types: placeholder as Registry['genres.show']['types'],
+  },
+  'notifications.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/notifications',
+    tokens: [[0,"api"],[0,"v1"],[0,"notifications"]],
+    types: placeholder as Registry['notifications.index']['types'],
+  },
+  'notifications.unread_count': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/notifications/unread-count',
+    tokens: [[0,"api"],[0,"v1"],[0,"notifications"],[0,"unread-count"]],
+    types: placeholder as Registry['notifications.unread_count']['types'],
+  },
+  'notifications.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/notifications/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"notifications"],[1,"id"]],
+    types: placeholder as Registry['notifications.show']['types'],
+  },
+  'notifications.mark_as_read': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/notifications/:id/read',
+    tokens: [[0,"api"],[0,"v1"],[0,"notifications"],[1,"id"],[0,"read"]],
+    types: placeholder as Registry['notifications.mark_as_read']['types'],
+  },
+  'notifications.mark_all_as_read': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/notifications/read-all',
+    tokens: [[0,"api"],[0,"v1"],[0,"notifications"],[0,"read-all"]],
+    types: placeholder as Registry['notifications.mark_all_as_read']['types'],
+  },
+  'notifications.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/notifications/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"notifications"],[1,"id"]],
+    types: placeholder as Registry['notifications.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

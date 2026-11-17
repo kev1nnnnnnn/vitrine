@@ -73,4 +73,16 @@ export interface ApiDefinition {
     update: typeof routes['event_artists.update']
     destroy: typeof routes['event_artists.destroy']
   }
+  genres: {
+    index: typeof routes['genres.index']
+    show: typeof routes['genres.show']
+  }
+  notifications: {
+    index: typeof routes['notifications.index']
+    unreadCount: typeof routes['notifications.unread_count']
+    show: typeof routes['notifications.show']
+    markAsRead: typeof routes['notifications.mark_as_read']
+    markAllAsRead: typeof routes['notifications.mark_all_as_read']
+    destroy: typeof routes['notifications.destroy']
+  }
 }

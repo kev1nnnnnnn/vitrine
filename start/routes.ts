@@ -36,6 +36,12 @@ const VenuesController = () =>
 const EventArtistsController = () =>
   import('#controllers/event_artists_controller')
 
+const GenresController = () =>
+  import('#controllers/genres_controller')
+
+const NotificationsController = () =>
+  import('#controllers/notifications_controller')
+
 router.get('/', () => {
   return {
     hello: 'world',
@@ -377,5 +383,67 @@ router
         ])
       })
       .use(middleware.auth())
+
+      /*
+      |--------------------------------------------------------------------------
+      | Public Genres
+      |--------------------------------------------------------------------------
+      */
+
+      router
+        .group(() => {
+          // Listar gêneros musicais
+          router.get('genres', [GenresController, 'index'])
+
+          // Consultar gênero específico
+          router.get('genres/:id', [GenresController, 'show'])
+        })
+
+        /*
+|--------------------------------------------------------------------------
+| Notifications
+|--------------------------------------------------------------------------
+*/
+
+router
+  .group(() => {
+    // Listar notificações
+    router.get('notifications', [
+      NotificationsController,
+      'index',
+    ])
+
+    // Contar notificações não lidas
+    router.get('notifications/unread-count', [
+      NotificationsController,
+      'unreadCount',
+    ])
+
+    // Consultar notificação específica
+    router.get('notifications/:id', [
+      NotificationsController,
+      'show',
+    ])
+
+    // Marcar uma notificação como lida
+    router.patch('notifications/:id/read', [
+      NotificationsController,
+      'markAsRead',
+    ])
+
+    // Marcar todas as notificações como lidas
+    router.patch('notifications/read-all', [
+      NotificationsController,
+      'markAllAsRead',
+    ])
+
+    // Excluir notificação
+    router.delete('notifications/:id', [
+      NotificationsController,
+      'destroy',
+    ])
+  })
+  .use(middleware.auth())
+        
   })
   .prefix('/api/v1')
