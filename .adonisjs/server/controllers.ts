@@ -5,7 +5,11 @@
 
 export const controllers = {
   AccessTokens: () => import('#controllers/access_tokens_controller'),
+  ArtistFollowers: () => import('#controllers/artist_followers_controller'),
+  ArtistMembers: () => import('#controllers/artist_members_controller'),
   Artists: () => import('#controllers/artists_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
+  PostMedias: () => import('#controllers/post_medias_controller'),
+  Posts: () => import('#controllers/posts_controller'),
   Profile: () => import('#controllers/profile_controller'),
 }

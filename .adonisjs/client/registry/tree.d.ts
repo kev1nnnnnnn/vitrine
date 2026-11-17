@@ -18,9 +18,39 @@ export interface ApiDefinition {
     accessTokens: {
       destroy: typeof routes['profile.access_tokens.destroy']
     }
+    artistFollowers: {
+      following: typeof routes['profile.artist_followers.following']
+    }
   }
   artists: {
     index: typeof routes['artists.index']
+    show: typeof routes['artists.show']
     store: typeof routes['artists.store']
+    syncGenres: typeof routes['artists.sync_genres']
+  }
+  artistMembers: {
+    index: typeof routes['artist_members.index']
+    store: typeof routes['artist_members.store']
+    update: typeof routes['artist_members.update']
+    destroy: typeof routes['artist_members.destroy']
+  }
+  artistFollowers: {
+    follow: typeof routes['artist_followers.follow']
+    unfollow: typeof routes['artist_followers.unfollow']
+    artistFollowers: typeof routes['artist_followers.artist_followers']
+    countFollowers: typeof routes['artist_followers.count_followers']
+  }
+  posts: {
+    index: typeof routes['posts.index']
+    show: typeof routes['posts.show']
+    store: typeof routes['posts.store']
+    update: typeof routes['posts.update']
+    destroy: typeof routes['posts.destroy']
+  }
+  postMedias: {
+    index: typeof routes['post_medias.index']
+    store: typeof routes['post_medias.store']
+    update: typeof routes['post_medias.update']
+    destroy: typeof routes['post_medias.destroy']
   }
 }

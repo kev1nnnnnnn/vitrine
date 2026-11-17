@@ -28,3 +28,14 @@ export const listArtistsValidator = vine.create({
 
   type: vine.enum(['band', 'solo', 'duo', 'group']).optional(),
 })
+
+export const showArtistValidator = vine.create({
+  id: vine.number().positive().withoutDecimals(),
+})
+
+
+export const syncArtistGenresValidator = vine.create({
+  genreIds: vine.array(
+    vine.number().positive().withoutDecimals()
+  ),
+})

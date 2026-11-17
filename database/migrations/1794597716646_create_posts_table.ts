@@ -33,13 +33,11 @@ export default class extends BaseSchema {
 
       table.timestamp('published_at').nullable()
 
-        
-table
-  .timestamp('created_at')
-  .notNullable()
-  .defaultTo(this.now())
+      table
+        .timestamp('created_at')
+        .notNullable()
+        .defaultTo(this.now())
 
-  
       table.timestamp('updated_at').nullable()
 
       table.index(['artist_id', 'status', 'published_at'])
