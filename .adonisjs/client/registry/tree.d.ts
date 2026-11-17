@@ -67,4 +67,10 @@ export interface ApiDefinition {
     update: typeof routes['venues.update']
     destroy: typeof routes['venues.destroy']
   }
+  eventArtists: {
+    index: typeof routes['event_artists.index']
+    store: typeof routes['event_artists.store']
+    update: typeof routes['event_artists.update']
+    destroy: typeof routes['event_artists.destroy']
+  }
 }

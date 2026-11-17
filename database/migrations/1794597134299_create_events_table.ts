@@ -1,7 +1,6 @@
 
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
-
 export default class extends BaseSchema {
   protected tableName = 'events'
 
@@ -34,7 +33,12 @@ export default class extends BaseSchema {
         .notNullable()
         .defaultTo('show')
 
-      table.timestamp('starts_at').notNullable()
+      // Data de início: padrão explícito, sem ON UPDATE automático.
+      table
+        .timestamp('starts_at')
+        .notNullable()
+        .defaultTo(this.now())
+
       table.timestamp('ends_at').nullable()
 
       table.string('cover_url', 2048).nullable()
@@ -59,15 +63,11 @@ export default class extends BaseSchema {
 
       table.boolean('is_public').notNullable().defaultTo(true)
 
-  
-table
-  .timestamp('created_at')
-  .notNullable()
-  .defaultTo(this.now())
-
+      table.timestamp('created_at').notNullable().defaultTo(this.now())
 
       table.timestamp('updated_at').nullable()
 
+      // Índices
       table.index(['starts_at', 'status'])
       table.index(['city', 'state'])
       table.index(['venue_id'])

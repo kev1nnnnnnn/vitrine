@@ -33,6 +33,9 @@ const EventsController = () =>
 const VenuesController = () =>
   import('#controllers/venues_controller')
 
+const EventArtistsController = () =>
+  import('#controllers/event_artists_controller')
+
 router.get('/', () => {
   return {
     hello: 'world',
@@ -327,6 +330,49 @@ router
         // Desativar local sem excluir o registro
         router.delete('venues/:id', [
           VenuesController,
+          'destroy',
+        ])
+      })
+      .use(middleware.auth())
+
+    /*
+    |--------------------------------------------------------------------------
+    | Public Event Artists
+    |--------------------------------------------------------------------------
+    */
+
+    router
+      .group(() => {
+        // Listar artistas associados a um evento
+        router.get('events/:eventId/artists', [
+          EventArtistsController,
+          'index',
+        ])
+      })
+
+    /*
+    |--------------------------------------------------------------------------
+    | Manage Event Artists
+    |--------------------------------------------------------------------------
+    */
+
+    router
+      .group(() => {
+        // Associar artista a um evento
+        router.post('events/:eventId/artists', [
+          EventArtistsController,
+          'store',
+        ])
+
+        // Atualizar dados da apresentação
+        router.put('event-artists/:eventArtistId', [
+          EventArtistsController,
+          'update',
+        ])
+
+        // Remover artista do evento
+        router.delete('event-artists/:eventArtistId', [
+          EventArtistsController,
           'destroy',
         ])
       })

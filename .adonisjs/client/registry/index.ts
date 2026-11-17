@@ -230,6 +230,30 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"venues"],[1,"id"]],
     types: placeholder as Registry['venues.destroy']['types'],
   },
+  'event_artists.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/events/:eventId/artists',
+    tokens: [[0,"api"],[0,"v1"],[0,"events"],[1,"eventId"],[0,"artists"]],
+    types: placeholder as Registry['event_artists.index']['types'],
+  },
+  'event_artists.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/events/:eventId/artists',
+    tokens: [[0,"api"],[0,"v1"],[0,"events"],[1,"eventId"],[0,"artists"]],
+    types: placeholder as Registry['event_artists.store']['types'],
+  },
+  'event_artists.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/event-artists/:eventArtistId',
+    tokens: [[0,"api"],[0,"v1"],[0,"event-artists"],[1,"eventArtistId"]],
+    types: placeholder as Registry['event_artists.update']['types'],
+  },
+  'event_artists.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/event-artists/:eventArtistId',
+    tokens: [[0,"api"],[0,"v1"],[0,"event-artists"],[1,"eventArtistId"]],
+    types: placeholder as Registry['event_artists.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

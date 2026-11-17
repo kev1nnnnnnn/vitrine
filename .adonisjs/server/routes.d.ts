@@ -41,6 +41,10 @@ export type ScannedRoutes = {
     'venues.store': { paramsTuple?: []; params?: {} }
     'venues.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'venues.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'event_artists.index': { paramsTuple: [ParamValue]; params: {'eventId': ParamValue} }
+    'event_artists.store': { paramsTuple: [ParamValue]; params: {'eventId': ParamValue} }
+    'event_artists.update': { paramsTuple: [ParamValue]; params: {'eventArtistId': ParamValue} }
+    'event_artists.destroy': { paramsTuple: [ParamValue]; params: {'eventArtistId': ParamValue} }
   }
   GET: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -57,6 +61,7 @@ export type ScannedRoutes = {
     'events.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'venues.index': { paramsTuple?: []; params?: {} }
     'venues.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'event_artists.index': { paramsTuple: [ParamValue]; params: {'eventId': ParamValue} }
   }
   HEAD: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -73,6 +78,7 @@ export type ScannedRoutes = {
     'events.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'venues.index': { paramsTuple?: []; params?: {} }
     'venues.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'event_artists.index': { paramsTuple: [ParamValue]; params: {'eventId': ParamValue} }
   }
   POST: {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
@@ -85,6 +91,7 @@ export type ScannedRoutes = {
     'post_medias.store': { paramsTuple: [ParamValue]; params: {'postId': ParamValue} }
     'events.store': { paramsTuple?: []; params?: {} }
     'venues.store': { paramsTuple?: []; params?: {} }
+    'event_artists.store': { paramsTuple: [ParamValue]; params: {'eventId': ParamValue} }
   }
   PUT: {
     'profile.profile.update': { paramsTuple?: []; params?: {} }
@@ -94,6 +101,7 @@ export type ScannedRoutes = {
     'post_medias.update': { paramsTuple: [ParamValue]; params: {'mediaId': ParamValue} }
     'events.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'venues.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'event_artists.update': { paramsTuple: [ParamValue]; params: {'eventArtistId': ParamValue} }
   }
   DELETE: {
     'artist_members.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'artistId': ParamValue,'memberId': ParamValue} }
@@ -101,6 +109,7 @@ export type ScannedRoutes = {
     'posts.destroy': { paramsTuple: [ParamValue]; params: {'postId': ParamValue} }
     'post_medias.destroy': { paramsTuple: [ParamValue]; params: {'mediaId': ParamValue} }
     'venues.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'event_artists.destroy': { paramsTuple: [ParamValue]; params: {'eventArtistId': ParamValue} }
   }
   PATCH: {
     'events.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

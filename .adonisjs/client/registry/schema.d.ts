@@ -489,6 +489,58 @@ export interface Registry {
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'event_artists.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/events/:eventId/artists'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { eventId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['index']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['index']>>>
+    }
+  }
+  'event_artists.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/events/:eventId/artists'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/event_artist').attachArtistValidator)>>
+      paramsTuple: [ParamValue]
+      params: { eventId: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/event_artist').attachArtistValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'event_artists.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/event-artists/:eventArtistId'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/event_artist').updateArtistPerformanceValidator)>>
+      paramsTuple: [ParamValue]
+      params: { eventArtistId: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/event_artist').updateArtistPerformanceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'event_artists.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/event-artists/:eventArtistId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { eventArtistId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['destroy']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/event_artists_controller').default['destroy']>>>
+    }
+  }
 }
 
 export namespace Route {

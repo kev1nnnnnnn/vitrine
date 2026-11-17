@@ -1,5 +1,6 @@
 
 import { DateTime } from 'luxon'
+
 import db from '@adonisjs/lucid/services/db'
 import type { TransactionClientContract } from '@adonisjs/lucid/types/database'
 
@@ -130,8 +131,29 @@ export default class EventService {
   }
 
   /**
-   * Gera um slug único.
-   * Quando informado, utiliza a mesma transação da operação.
+   * Identifica violação de chave única do MySQL.
+   */
+  private isDuplicateKeyError(error: unknown): boolean {
+    if (typeof error !== 'object' || error === null) {
+      return false
+    }
+
+    const databaseError = error as {
+      code?: string
+      errno?: number
+    }
+
+    return (
+      databaseError.code === 'ER_DUP_ENTRY' ||
+      databaseError.errno === 1062
+    )
+  }
+
+  /**
+   * Gera um slug disponível.
+   *
+   * A consulta utiliza a transação quando ela é informada.
+   * A unicidade definitiva continua protegida pelo índice UNIQUE do banco.
    */
   private async generateUniqueSlug(
     title: string,
@@ -164,10 +186,7 @@ export default class EventService {
   }
 
   /**
-   * Busca um local utilizando bloqueio de linha.
-   *
-   * O bloqueio impede que uma desativação concorrente
-   * aconteça enquanto o evento está sendo associado.
+   * Busca um local ativo utilizando bloqueio de linha.
    */
   private async findActiveVenue(
     venueId: number,
@@ -216,13 +235,18 @@ export default class EventService {
 
   /**
    * Verifica papéis globais do usuário.
+   * Pode utilizar uma transação existente.
    */
   private async hasGlobalRole(
     userId: number | bigint,
-    roles: string[]
+    roles: string[],
+    trx?: TransactionClientContract
   ): Promise<boolean> {
-    const permission = await db
-      .from('user_roles')
+    const query = trx
+      ? trx.from('user_roles')
+      : db.from('user_roles')
+
+    const permission = await query
       .innerJoin('roles', 'roles.id', 'user_roles.role_id')
       .where('user_roles.user_id', String(userId))
       .whereIn('roles.name', roles)
@@ -233,11 +257,17 @@ export default class EventService {
 
   /**
    * Verifica se o usuário administra algum artista.
+   * Pode utilizar uma transação existente.
    */
   private async hasArtistPermission(
-    userId: number | bigint
+    userId: number | bigint,
+    trx?: TransactionClientContract
   ): Promise<boolean> {
-    const permission = await ArtistUserRole.query()
+    const query = trx
+      ? ArtistUserRole.query({ client: trx })
+      : ArtistUserRole.query()
+
+    const permission = await query
       .where('userId', String(userId))
       .whereIn('role', ['owner', 'admin', 'editor'])
       .first()
@@ -249,18 +279,20 @@ export default class EventService {
    * Verifica se o usuário pode cadastrar eventos.
    */
   private async canCreateEvent(
-    userId: number | bigint
+    userId: number | bigint,
+    trx?: TransactionClientContract
   ): Promise<boolean> {
-    const hasGlobalPermission = await this.hasGlobalRole(userId, [
-      'producer',
-      'admin',
-    ])
+    const hasGlobalPermission = await this.hasGlobalRole(
+      userId,
+      ['producer', 'admin'],
+      trx
+    )
 
     if (hasGlobalPermission) {
       return true
     }
 
-    return this.hasArtistPermission(userId)
+    return this.hasArtistPermission(userId, trx)
   }
 
   /**
@@ -268,20 +300,24 @@ export default class EventService {
    */
   private async canManageEvent(
     event: Event,
-    userId: number | bigint
+    userId: number | bigint,
+    trx?: TransactionClientContract
   ): Promise<boolean> {
     if (String(event.createdByUserId) === String(userId)) {
       return true
     }
 
-    const isAdmin = await this.hasGlobalRole(userId, ['admin'])
+    const isAdmin = await this.hasGlobalRole(userId, ['admin'], trx)
 
     if (isAdmin) {
       return true
     }
 
-    const permission = await db
-      .from('event_artists')
+    const query = trx
+      ? trx.from('event_artists')
+      : db.from('event_artists')
+
+    const permission = await query
       .innerJoin(
         'artist_user_roles',
         'artist_user_roles.artist_id',
@@ -302,12 +338,6 @@ export default class EventService {
     userId: number | bigint,
     data: CreateEventData
   ): Promise<CreateEventResult> {
-    const authorized = await this.canCreateEvent(userId)
-
-    if (!authorized) {
-      return { status: 'forbidden' }
-    }
-
     const startsAt = this.parseDate(data.startsAt)
 
     if (!startsAt) {
@@ -325,6 +355,13 @@ export default class EventService {
     }
 
     const result = await db.transaction(async (trx) => {
+      // A autorização agora utiliza a mesma transação da criação.
+      const authorized = await this.canCreateEvent(userId, trx)
+
+      if (!authorized) {
+        return { status: 'forbidden' } as const
+      }
+
       let addressData = {
         address: data.address ?? null,
         number: data.number ?? null,
@@ -351,25 +388,42 @@ export default class EventService {
         addressData = this.getVenueAddress(venueResult.venue)
       }
 
-      const slug = await this.generateUniqueSlug(data.title, undefined, trx)
+      // Trata colisões de slug causadas por criações simultâneas.
+      let event: Event | null = null
 
-      const event = await Event.create(
-        {
-          createdByUserId: userId,
-          venueId,
-          title: data.title,
-          slug,
-          description: data.description ?? null,
-          type: data.type ?? 'show',
-          startsAt,
-          endsAt,
-          coverUrl: data.coverUrl ?? null,
-          ...addressData,
-          status: 'scheduled',
-          isPublic: data.isPublic ?? true,
-        },
-        { client: trx }
-      )
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const slug = await this.generateUniqueSlug(data.title, undefined, trx)
+
+        try {
+          event = await Event.create(
+            {
+              createdByUserId: userId,
+              venueId,
+              title: data.title,
+              slug,
+              description: data.description ?? null,
+              type: data.type ?? 'show',
+              startsAt,
+              endsAt,
+              coverUrl: data.coverUrl ?? null,
+              ...addressData,
+              status: 'scheduled',
+              isPublic: data.isPublic ?? true,
+            },
+            { client: trx }
+          )
+
+          break
+        } catch (error) {
+          if (!this.isDuplicateKeyError(error) || attempt === 4) {
+            throw error
+          }
+        }
+      }
+
+      if (!event) {
+        throw new Error('Não foi possível gerar um slug exclusivo para o evento.')
+      }
 
       return {
         status: 'success' as const,
@@ -507,7 +561,8 @@ export default class EventService {
         return { status: 'not_found' } as const
       }
 
-      const authorized = await this.canManageEvent(event, userId)
+      // A autorização consulta as permissões na mesma transação.
+      const authorized = await this.canManageEvent(event, userId, trx)
 
       if (!authorized) {
         return { status: 'forbidden' } as const
@@ -548,11 +603,6 @@ export default class EventService {
 
       if (data.title !== undefined) {
         event.title = data.title
-        event.slug = await this.generateUniqueSlug(
-          data.title,
-          event.id,
-          trx
-        )
       }
 
       if (data.description !== undefined) {
@@ -591,10 +641,7 @@ export default class EventService {
         if (data.venueId === null) {
           event.venueId = null
         } else {
-          const venueResult = await this.findActiveVenue(
-            data.venueId,
-            trx
-          )
+          const venueResult = await this.findActiveVenue(data.venueId, trx)
 
           if (venueResult.status !== 'success') {
             return { status: venueResult.status } as const
@@ -619,7 +666,7 @@ export default class EventService {
 
       /**
        * Permite editar o endereço próprio.
-       * Quando um local é associado, o snapshot do local prevalece.
+       * Quando um local está associado, o snapshot do local prevalece.
        */
       const canUpdateAddress =
         data.venueId === null ||
@@ -675,7 +722,34 @@ export default class EventService {
         event.status = data.status
       }
 
-      await event.save()
+      // Se o título mudou, tenta novamente em caso de colisão concorrente.
+      if (data.title !== undefined) {
+        let saved = false
+
+        for (let attempt = 0; attempt < 5; attempt++) {
+          event.slug = await this.generateUniqueSlug(
+            data.title,
+            event.id,
+            trx
+          )
+
+          try {
+            await event.save()
+            saved = true
+            break
+          } catch (error) {
+            if (!this.isDuplicateKeyError(error) || attempt === 4) {
+              throw error
+            }
+          }
+        }
+
+        if (!saved) {
+          throw new Error('Não foi possível gerar um slug exclusivo para o evento.')
+        }
+      } else {
+        await event.save()
+      }
 
       return {
         status: 'success' as const,
@@ -700,28 +774,42 @@ export default class EventService {
     eventId: string,
     userId: number | bigint
   ): Promise<CancelEventResult> {
-    const event = await Event.find(eventId)
+    const result = await db.transaction(async (trx) => {
+      // Bloqueia o evento para evitar alterações concorrentes.
+      const event = await Event.query({ client: trx })
+        .where('id', eventId)
+        .forUpdate()
+        .first()
 
-    if (!event) {
-      return { status: 'not_found' }
+      if (!event) {
+        return { status: 'not_found' } as const
+      }
+
+      // Verifica a permissão dentro da mesma transação.
+      const authorized = await this.canManageEvent(event, userId, trx)
+
+      if (!authorized) {
+        return { status: 'forbidden' } as const
+      }
+
+      event.useTransaction(trx)
+      event.status = 'cancelled'
+
+      await event.save()
+
+      return {
+        status: 'success' as const,
+        event,
+      }
+    })
+
+    if (result.status !== 'success') {
+      return result
     }
 
-    const authorized = await this.canManageEvent(event, userId)
+    await result.event.load('venue')
+    await result.event.load('artists')
 
-    if (!authorized) {
-      return { status: 'forbidden' }
-    }
-
-    event.status = 'cancelled'
-
-    await event.save()
-
-    await event.load('venue')
-    await event.load('artists')
-
-    return {
-      status: 'success',
-      event,
-    }
+    return result
   }
 }

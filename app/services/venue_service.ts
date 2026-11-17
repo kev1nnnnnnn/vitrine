@@ -1,6 +1,7 @@
 
 import { DateTime } from 'luxon'
 import db from '@adonisjs/lucid/services/db'
+import type { TransactionClientContract } from '@adonisjs/lucid/types/database'
 
 import Venue from '#models/venue'
 
@@ -63,21 +64,27 @@ export class VenueService {
    * Gera um slug a partir do nome do local.
    */
   private generateSlug(value: string): string {
-    return value
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
+    return (
+      value
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'local'
+    )
   }
 
   /**
-   * Gera um slug único.
+   * Gera um slug único dentro da transação informada.
+   *
+   * A constraint UNIQUE no banco continua sendo a proteção
+   * definitiva contra colisões entre operações simultâneas.
    */
   private async generateUniqueSlug(
     name: string,
-    ignoreId?: number
+    ignoreId: number | bigint | undefined,
+    trx: TransactionClientContract
   ): Promise<string> {
     const baseSlug = this.generateSlug(name)
 
@@ -85,10 +92,10 @@ export class VenueService {
     let counter = 1
 
     while (true) {
-      const query = Venue.query().where('slug', slug)
+      const query = Venue.query({ client: trx }).where('slug', slug)
 
       if (ignoreId !== undefined) {
-        query.whereNot('id', ignoreId)
+        query.whereNot('id', String(ignoreId))
       }
 
       const existingVenue = await query.first()
@@ -105,11 +112,14 @@ export class VenueService {
   /**
    * Verifica se o usuário possui papel global de administrador.
    */
-  private async hasGlobalAdminRole(userId: number): Promise<boolean> {
-    const role = await db
+  private async hasGlobalAdminRole(
+    userId: number | bigint,
+    trx: TransactionClientContract
+  ): Promise<boolean> {
+    const role = await trx
       .from('user_roles')
       .innerJoin('roles', 'roles.id', 'user_roles.role_id')
-      .where('user_roles.user_id', userId)
+      .where('user_roles.user_id', String(userId))
       .where('roles.name', 'admin')
       .first()
 
@@ -118,51 +128,60 @@ export class VenueService {
 
   /**
    * Verifica se o usuário pode administrar o local.
-   * O criador ou um administrador global pode gerenciá-lo.
    */
   private async canManageVenue(
     venue: Venue,
-    userId: number
+    userId: number | bigint,
+    trx: TransactionClientContract
   ): Promise<boolean> {
-    if (Number(venue.createdByUserId) === userId) {
+    if (String(venue.createdByUserId) === String(userId)) {
       return true
     }
 
-    return this.hasGlobalAdminRole(userId)
+    return this.hasGlobalAdminRole(userId, trx)
   }
 
   /**
    * Cadastra um novo local.
    */
-  async create(userId: number, data: CreateVenueData) {
-    const slug = await this.generateUniqueSlug(data.name)
+  async create(userId: number | bigint, data: CreateVenueData) {
+    return db.transaction(async (trx) => {
+      const slug = await this.generateUniqueSlug(
+        data.name,
+        undefined,
+        trx
+      )
 
-    const venue = await Venue.create({
-      createdByUserId: userId,
-      name: data.name,
-      slug,
-      description: data.description ?? null,
-      address: data.address ?? null,
-      number: data.number ?? null,
-      complement: data.complement ?? null,
-      neighborhood: data.neighborhood ?? null,
-      city: data.city,
-      state: data.state,
-      postalCode: data.postalCode ?? null,
-      country: data.country ?? 'Brasil',
-      latitude: this.toDecimalString(data.latitude ?? null),
-      longitude: this.toDecimalString(data.longitude ?? null),
-      phone: data.phone ?? null,
-      website: data.website ?? null,
-      isActive: true,
-      createdAt: DateTime.now(),
-      updatedAt: null,
+      const venue = await Venue.create(
+        {
+          createdByUserId: userId,
+          name: data.name,
+          slug,
+          description: data.description ?? null,
+          address: data.address ?? null,
+          number: data.number ?? null,
+          complement: data.complement ?? null,
+          neighborhood: data.neighborhood ?? null,
+          city: data.city,
+          state: data.state,
+          postalCode: data.postalCode ?? null,
+          country: data.country ?? 'Brasil',
+          latitude: this.toDecimalString(data.latitude ?? null),
+          longitude: this.toDecimalString(data.longitude ?? null),
+          phone: data.phone ?? null,
+          website: data.website ?? null,
+          isActive: true,
+          createdAt: DateTime.now(),
+          updatedAt: null,
+        },
+        { client: trx }
+      )
+
+      return {
+        status: 'success' as const,
+        venue,
+      }
     })
-
-    return {
-      status: 'success' as const,
-      venue,
-    }
   }
 
   /**
@@ -226,106 +245,14 @@ export class VenueService {
   /**
    * Atualiza os dados cadastrais de um local existente.
    *
-   * A ativação e desativação não são realizadas por este método.
+   * Utiliza transação e bloqueio de linha.
+   * Não permite alterar a situação de ativação do local.
    */
   async update(
     id: string | number,
-    userId: number,
+    userId: number | bigint,
     data: UpdateVenueData
   ) {
-    const venue = await Venue.find(id)
-
-    if (!venue) {
-      return {
-        status: 'not_found' as const,
-      }
-    }
-
-    const canManage = await this.canManageVenue(venue, userId)
-
-    if (!canManage) {
-      return {
-        status: 'forbidden' as const,
-      }
-    }
-
-    if (data.name !== undefined && data.name !== venue.name) {
-      venue.slug = await this.generateUniqueSlug(
-        data.name,
-        Number(venue.id)
-      )
-      venue.name = data.name
-    }
-
-    if (data.description !== undefined) {
-      venue.description = data.description
-    }
-
-    if (data.address !== undefined) {
-      venue.address = data.address
-    }
-
-    if (data.number !== undefined) {
-      venue.number = data.number
-    }
-
-    if (data.complement !== undefined) {
-      venue.complement = data.complement
-    }
-
-    if (data.neighborhood !== undefined) {
-      venue.neighborhood = data.neighborhood
-    }
-
-    if (data.city !== undefined) {
-      venue.city = data.city
-    }
-
-    if (data.state !== undefined) {
-      venue.state = data.state
-    }
-
-    if (data.postalCode !== undefined) {
-      venue.postalCode = data.postalCode
-    }
-
-    if (data.country !== undefined) {
-      venue.country = data.country
-    }
-
-    if (data.latitude !== undefined) {
-      venue.latitude = this.toDecimalString(data.latitude)
-    }
-
-    if (data.longitude !== undefined) {
-      venue.longitude = this.toDecimalString(data.longitude)
-    }
-
-    if (data.phone !== undefined) {
-      venue.phone = data.phone
-    }
-
-    if (data.website !== undefined) {
-      venue.website = data.website
-    }
-
-    venue.updatedAt = DateTime.now()
-
-    await venue.save()
-
-    return {
-      status: 'success' as const,
-      venue,
-    }
-  }
-
-  /**
-   * Desativa um local sem excluir seu registro.
-   *
-   * Utiliza transação e bloqueio da linha para serializar
-   * a desativação com operações que associam eventos ao local.
-   */
-  async deactivate(id: string | number, userId: number) {
     return db.transaction(async (trx) => {
       const venue = await Venue.query({ client: trx })
         .where('id', id)
@@ -338,7 +265,115 @@ export class VenueService {
         }
       }
 
-      const canManage = await this.canManageVenue(venue, userId)
+      const canManage = await this.canManageVenue(
+        venue,
+        userId,
+        trx
+      )
+
+      if (!canManage) {
+        return {
+          status: 'forbidden' as const,
+        }
+      }
+
+      if (data.name !== undefined && data.name !== venue.name) {
+        venue.slug = await this.generateUniqueSlug(
+          data.name,
+          venue.id,
+          trx
+        )
+
+        venue.name = data.name
+      }
+
+      if (data.description !== undefined) {
+        venue.description = data.description
+      }
+
+      if (data.address !== undefined) {
+        venue.address = data.address
+      }
+
+      if (data.number !== undefined) {
+        venue.number = data.number
+      }
+
+      if (data.complement !== undefined) {
+        venue.complement = data.complement
+      }
+
+      if (data.neighborhood !== undefined) {
+        venue.neighborhood = data.neighborhood
+      }
+
+      if (data.city !== undefined) {
+        venue.city = data.city
+      }
+
+      if (data.state !== undefined) {
+        venue.state = data.state
+      }
+
+      if (data.postalCode !== undefined) {
+        venue.postalCode = data.postalCode
+      }
+
+      if (data.country !== undefined) {
+        venue.country = data.country
+      }
+
+      if (data.latitude !== undefined) {
+        venue.latitude = this.toDecimalString(data.latitude)
+      }
+
+      if (data.longitude !== undefined) {
+        venue.longitude = this.toDecimalString(data.longitude)
+      }
+
+      if (data.phone !== undefined) {
+        venue.phone = data.phone
+      }
+
+      if (data.website !== undefined) {
+        venue.website = data.website
+      }
+
+      venue.updatedAt = DateTime.now()
+
+      await venue.save()
+
+      return {
+        status: 'success' as const,
+        venue,
+      }
+    })
+  }
+
+  /**
+   * Desativa um local sem excluir seu registro.
+   *
+   * O bloqueio impede que uma associação concorrente
+   * seja concluída simultaneamente com a desativação.
+   */
+  async deactivate(id: string | number, userId: number | bigint) {
+    return db.transaction(async (trx) => {
+      const venue = await Venue.query({ client: trx })
+        .where('id', id)
+        .forUpdate()
+        .first()
+
+      if (!venue) {
+        return {
+          status: 'not_found' as const,
+        }
+      }
+
+      const canManage = await this.canManageVenue(
+        venue,
+        userId,
+        trx
+      )
 
       if (!canManage) {
         return {

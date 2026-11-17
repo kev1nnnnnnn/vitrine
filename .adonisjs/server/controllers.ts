@@ -8,6 +8,7 @@ export const controllers = {
   ArtistFollowers: () => import('#controllers/artist_followers_controller'),
   ArtistMembers: () => import('#controllers/artist_members_controller'),
   Artists: () => import('#controllers/artists_controller'),
+  EventArtists: () => import('#controllers/event_artists_controller'),
   Events: () => import('#controllers/events_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   PostMedias: () => import('#controllers/post_medias_controller'),
