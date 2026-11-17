@@ -170,6 +170,66 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"post-medias"],[1,"mediaId"]],
     types: placeholder as Registry['post_medias.destroy']['types'],
   },
+  'events.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/events',
+    tokens: [[0,"api"],[0,"v1"],[0,"events"]],
+    types: placeholder as Registry['events.index']['types'],
+  },
+  'events.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/events/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"events"],[1,"id"]],
+    types: placeholder as Registry['events.show']['types'],
+  },
+  'events.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/events',
+    tokens: [[0,"api"],[0,"v1"],[0,"events"]],
+    types: placeholder as Registry['events.store']['types'],
+  },
+  'events.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/events/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"events"],[1,"id"]],
+    types: placeholder as Registry['events.update']['types'],
+  },
+  'events.cancel': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/events/:id/cancel',
+    tokens: [[0,"api"],[0,"v1"],[0,"events"],[1,"id"],[0,"cancel"]],
+    types: placeholder as Registry['events.cancel']['types'],
+  },
+  'venues.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/venues',
+    tokens: [[0,"api"],[0,"v1"],[0,"venues"]],
+    types: placeholder as Registry['venues.index']['types'],
+  },
+  'venues.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/venues/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"venues"],[1,"id"]],
+    types: placeholder as Registry['venues.show']['types'],
+  },
+  'venues.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/venues',
+    tokens: [[0,"api"],[0,"v1"],[0,"venues"]],
+    types: placeholder as Registry['venues.store']['types'],
+  },
+  'venues.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/venues/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"venues"],[1,"id"]],
+    types: placeholder as Registry['venues.update']['types'],
+  },
+  'venues.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/venues/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"venues"],[1,"id"]],
+    types: placeholder as Registry['venues.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

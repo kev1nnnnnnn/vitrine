@@ -359,6 +359,136 @@ export interface Registry {
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/post_medias_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'events.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/events'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/event').listEventsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/events_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/events_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/events_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'events.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/events/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/event').showEventValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/events_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/events_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/events_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'events.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/events'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/event').createEventValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/event').createEventValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/events_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/events_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/events_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'events.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/events/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/event').updateEventValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/event').updateEventValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/events_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/events_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/events_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'events.cancel': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/events/:id/cancel'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/event').showEventValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/event').showEventValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/events_controller').default['cancel']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/events_controller').default['cancel']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/events_controller').default['cancel']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'venues.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/venues'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/venue').listVenuesValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'venues.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/venues/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/venue').showVenueValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'venues.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/venues'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/venue').createVenueValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/venue').createVenueValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'venues.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/venues/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/venue').updateVenueValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/venue').updateVenueValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'venues.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/venues/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/venue').showVenueValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/venue').showVenueValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/venues_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
 }
 
 export namespace Route {

@@ -27,6 +27,12 @@ const PostsController = () =>
 const PostMediasController = () =>
   import('#controllers/post_medias_controller')
 
+const EventsController = () =>
+  import('#controllers/events_controller')
+
+const VenuesController = () =>
+  import('#controllers/venues_controller')
+
 router.get('/', () => {
   return {
     hello: 'world',
@@ -202,7 +208,6 @@ router
 
     router
       .group(() => {
-        // Listar mídias de uma publicação
         router.get('posts/:postId/medias', [
           PostMediasController,
           'index',
@@ -217,21 +222,111 @@ router
 
     router
       .group(() => {
-        // Adicionar mídia a uma publicação
         router.post('posts/:postId/medias', [
           PostMediasController,
           'store',
         ])
 
-        // Atualizar mídia
         router.put('post-medias/:mediaId', [
           PostMediasController,
           'update',
         ])
 
-        // Excluir mídia
         router.delete('post-medias/:mediaId', [
           PostMediasController,
+          'destroy',
+        ])
+      })
+      .use(middleware.auth())
+
+    /*
+    |--------------------------------------------------------------------------
+    | Public Events
+    |--------------------------------------------------------------------------
+    */
+
+    router
+      .group(() => {
+        router.get('events', [
+          EventsController,
+          'index',
+        ])
+
+        router.get('events/:id', [
+          EventsController,
+          'show',
+        ])
+      })
+
+    /*
+    |--------------------------------------------------------------------------
+    | Manage Events
+    |--------------------------------------------------------------------------
+    */
+
+    router
+      .group(() => {
+        router.post('events', [
+          EventsController,
+          'store',
+        ])
+
+        router.put('events/:id', [
+          EventsController,
+          'update',
+        ])
+
+        router.patch('events/:id/cancel', [
+          EventsController,
+          'cancel',
+        ])
+      })
+      .use(middleware.auth())
+
+    /*
+    |--------------------------------------------------------------------------
+    | Public Venues
+    |--------------------------------------------------------------------------
+    */
+
+    router
+      .group(() => {
+        // Listar locais ativos
+        router.get('venues', [
+          VenuesController,
+          'index',
+        ])
+
+        // Consultar local individual
+        router.get('venues/:id', [
+          VenuesController,
+          'show',
+        ])
+      })
+
+    /*
+    |--------------------------------------------------------------------------
+    | Manage Venues
+    |--------------------------------------------------------------------------
+    */
+
+    router
+      .group(() => {
+        // Cadastrar local
+        router.post('venues', [
+          VenuesController,
+          'store',
+        ])
+
+        // Atualizar local
+        router.put('venues/:id', [
+          VenuesController,
+          'update',
+        ])
+
+        // Desativar local sem excluir o registro
+        router.delete('venues/:id', [
+          VenuesController,
           'destroy',
         ])
       })

@@ -31,6 +31,16 @@ export type ScannedRoutes = {
     'post_medias.store': { paramsTuple: [ParamValue]; params: {'postId': ParamValue} }
     'post_medias.update': { paramsTuple: [ParamValue]; params: {'mediaId': ParamValue} }
     'post_medias.destroy': { paramsTuple: [ParamValue]; params: {'mediaId': ParamValue} }
+    'events.index': { paramsTuple?: []; params?: {} }
+    'events.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'events.store': { paramsTuple?: []; params?: {} }
+    'events.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'events.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'venues.index': { paramsTuple?: []; params?: {} }
+    'venues.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'venues.store': { paramsTuple?: []; params?: {} }
+    'venues.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'venues.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -43,6 +53,10 @@ export type ScannedRoutes = {
     'posts.index': { paramsTuple: [ParamValue]; params: {'artistId': ParamValue} }
     'posts.show': { paramsTuple: [ParamValue]; params: {'postId': ParamValue} }
     'post_medias.index': { paramsTuple: [ParamValue]; params: {'postId': ParamValue} }
+    'events.index': { paramsTuple?: []; params?: {} }
+    'events.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'venues.index': { paramsTuple?: []; params?: {} }
+    'venues.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -55,6 +69,10 @@ export type ScannedRoutes = {
     'posts.index': { paramsTuple: [ParamValue]; params: {'artistId': ParamValue} }
     'posts.show': { paramsTuple: [ParamValue]; params: {'postId': ParamValue} }
     'post_medias.index': { paramsTuple: [ParamValue]; params: {'postId': ParamValue} }
+    'events.index': { paramsTuple?: []; params?: {} }
+    'events.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'venues.index': { paramsTuple?: []; params?: {} }
+    'venues.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
@@ -65,6 +83,8 @@ export type ScannedRoutes = {
     'artist_followers.follow': { paramsTuple: [ParamValue]; params: {'artistId': ParamValue} }
     'posts.store': { paramsTuple: [ParamValue]; params: {'artistId': ParamValue} }
     'post_medias.store': { paramsTuple: [ParamValue]; params: {'postId': ParamValue} }
+    'events.store': { paramsTuple?: []; params?: {} }
+    'venues.store': { paramsTuple?: []; params?: {} }
   }
   PUT: {
     'profile.profile.update': { paramsTuple?: []; params?: {} }
@@ -72,12 +92,18 @@ export type ScannedRoutes = {
     'artist_members.update': { paramsTuple: [ParamValue,ParamValue]; params: {'artistId': ParamValue,'memberId': ParamValue} }
     'posts.update': { paramsTuple: [ParamValue]; params: {'postId': ParamValue} }
     'post_medias.update': { paramsTuple: [ParamValue]; params: {'mediaId': ParamValue} }
+    'events.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'venues.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
     'artist_members.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'artistId': ParamValue,'memberId': ParamValue} }
     'artist_followers.unfollow': { paramsTuple: [ParamValue]; params: {'artistId': ParamValue} }
     'posts.destroy': { paramsTuple: [ParamValue]; params: {'postId': ParamValue} }
     'post_medias.destroy': { paramsTuple: [ParamValue]; params: {'mediaId': ParamValue} }
+    'venues.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
+  PATCH: {
+    'events.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

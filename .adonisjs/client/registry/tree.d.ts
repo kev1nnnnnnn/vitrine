@@ -53,4 +53,18 @@ export interface ApiDefinition {
     update: typeof routes['post_medias.update']
     destroy: typeof routes['post_medias.destroy']
   }
+  events: {
+    index: typeof routes['events.index']
+    show: typeof routes['events.show']
+    store: typeof routes['events.store']
+    update: typeof routes['events.update']
+    cancel: typeof routes['events.cancel']
+  }
+  venues: {
+    index: typeof routes['venues.index']
+    show: typeof routes['venues.show']
+    store: typeof routes['venues.store']
+    update: typeof routes['venues.update']
+    destroy: typeof routes['venues.destroy']
+  }
 }

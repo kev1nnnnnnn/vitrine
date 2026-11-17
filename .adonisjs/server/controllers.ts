@@ -8,8 +8,10 @@ export const controllers = {
   ArtistFollowers: () => import('#controllers/artist_followers_controller'),
   ArtistMembers: () => import('#controllers/artist_members_controller'),
   Artists: () => import('#controllers/artists_controller'),
+  Events: () => import('#controllers/events_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   PostMedias: () => import('#controllers/post_medias_controller'),
   Posts: () => import('#controllers/posts_controller'),
   Profile: () => import('#controllers/profile_controller'),
+  Venues: () => import('#controllers/venues_controller'),
 }

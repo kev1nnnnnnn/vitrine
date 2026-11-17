@@ -1,3 +1,4 @@
+
 import { EventSchema } from '#database/schema'
 import { belongsTo, manyToMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
