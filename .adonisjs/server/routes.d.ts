@@ -53,6 +53,17 @@ export type ScannedRoutes = {
     'notifications.mark_as_read': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'notifications.mark_all_as_read': { paramsTuple?: []; params?: {} }
     'notifications.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'user_devices.index': { paramsTuple?: []; params?: {} }
+    'user_devices.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'user_devices.store': { paramsTuple?: []; params?: {} }
+    'user_devices.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'user_devices.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'reports.store': { paramsTuple?: []; params?: {} }
+    'reports.index': { paramsTuple?: []; params?: {} }
+    'reports.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'reports.update_status': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'moderation_logs.index': { paramsTuple?: []; params?: {} }
+    'moderation_logs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -75,6 +86,12 @@ export type ScannedRoutes = {
     'notifications.index': { paramsTuple?: []; params?: {} }
     'notifications.unread_count': { paramsTuple?: []; params?: {} }
     'notifications.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'user_devices.index': { paramsTuple?: []; params?: {} }
+    'user_devices.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'reports.index': { paramsTuple?: []; params?: {} }
+    'reports.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'moderation_logs.index': { paramsTuple?: []; params?: {} }
+    'moderation_logs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -97,6 +114,12 @@ export type ScannedRoutes = {
     'notifications.index': { paramsTuple?: []; params?: {} }
     'notifications.unread_count': { paramsTuple?: []; params?: {} }
     'notifications.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'user_devices.index': { paramsTuple?: []; params?: {} }
+    'user_devices.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'reports.index': { paramsTuple?: []; params?: {} }
+    'reports.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'moderation_logs.index': { paramsTuple?: []; params?: {} }
+    'moderation_logs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
@@ -110,6 +133,8 @@ export type ScannedRoutes = {
     'events.store': { paramsTuple?: []; params?: {} }
     'venues.store': { paramsTuple?: []; params?: {} }
     'event_artists.store': { paramsTuple: [ParamValue]; params: {'eventId': ParamValue} }
+    'user_devices.store': { paramsTuple?: []; params?: {} }
+    'reports.store': { paramsTuple?: []; params?: {} }
   }
   PUT: {
     'profile.profile.update': { paramsTuple?: []; params?: {} }
@@ -120,6 +145,7 @@ export type ScannedRoutes = {
     'events.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'venues.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'event_artists.update': { paramsTuple: [ParamValue]; params: {'eventArtistId': ParamValue} }
+    'user_devices.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
     'artist_members.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'artistId': ParamValue,'memberId': ParamValue} }
@@ -129,11 +155,13 @@ export type ScannedRoutes = {
     'venues.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'event_artists.destroy': { paramsTuple: [ParamValue]; params: {'eventArtistId': ParamValue} }
     'notifications.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'user_devices.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PATCH: {
     'events.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'notifications.mark_as_read': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'notifications.mark_all_as_read': { paramsTuple?: []; params?: {} }
+    'reports.update_status': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

@@ -11,10 +11,13 @@ export const controllers = {
   EventArtists: () => import('#controllers/event_artists_controller'),
   Events: () => import('#controllers/events_controller'),
   Genres: () => import('#controllers/genres_controller'),
+  ModerationLogs: () => import('#controllers/moderation_logs_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Notifications: () => import('#controllers/notifications_controller'),
   PostMedias: () => import('#controllers/post_medias_controller'),
   Posts: () => import('#controllers/posts_controller'),
   Profile: () => import('#controllers/profile_controller'),
+  Reports: () => import('#controllers/reports_controller'),
+  UserDevices: () => import('#controllers/user_devices_controller'),
   Venues: () => import('#controllers/venues_controller'),
 }

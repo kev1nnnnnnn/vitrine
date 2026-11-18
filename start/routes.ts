@@ -42,6 +42,15 @@ const GenresController = () =>
 const NotificationsController = () =>
   import('#controllers/notifications_controller')
 
+const UserDevicesController = () =>
+  import('#controllers/user_devices_controller')
+
+const ReportsController = () =>
+  import('#controllers/reports_controller')
+
+const ModerationLogsController = () =>
+  import('#controllers/moderation_logs_controller')
+
 router.get('/', () => {
   return {
     hello: 'world',
@@ -76,7 +85,6 @@ router
         router.put('profile', [controllers.Profile, 'update'])
         router.post('logout', [controllers.AccessTokens, 'destroy'])
 
-        // Artistas que o usuário autenticado segue
         router.get('following', [
           ArtistFollowersController,
           'following',
@@ -171,18 +179,17 @@ router
     |--------------------------------------------------------------------------
     */
 
-    router
-      .group(() => {
-        router.get('artists/:artistId/posts', [
-          PostsController,
-          'index',
-        ])
+    router.group(() => {
+      router.get('artists/:artistId/posts', [
+        PostsController,
+        'index',
+      ])
 
-        router.get('posts/:postId', [
-          PostsController,
-          'show',
-        ])
-      })
+      router.get('posts/:postId', [
+        PostsController,
+        'show',
+      ])
+    })
 
     /*
     |--------------------------------------------------------------------------
@@ -215,13 +222,12 @@ router
     |--------------------------------------------------------------------------
     */
 
-    router
-      .group(() => {
-        router.get('posts/:postId/medias', [
-          PostMediasController,
-          'index',
-        ])
-      })
+    router.group(() => {
+      router.get('posts/:postId/medias', [
+        PostMediasController,
+        'index',
+      ])
+    })
 
     /*
     |--------------------------------------------------------------------------
@@ -254,18 +260,17 @@ router
     |--------------------------------------------------------------------------
     */
 
-    router
-      .group(() => {
-        router.get('events', [
-          EventsController,
-          'index',
-        ])
+    router.group(() => {
+      router.get('events', [
+        EventsController,
+        'index',
+      ])
 
-        router.get('events/:id', [
-          EventsController,
-          'show',
-        ])
-      })
+      router.get('events/:id', [
+        EventsController,
+        'show',
+      ])
+    })
 
     /*
     |--------------------------------------------------------------------------
@@ -298,20 +303,17 @@ router
     |--------------------------------------------------------------------------
     */
 
-    router
-      .group(() => {
-        // Listar locais ativos
-        router.get('venues', [
-          VenuesController,
-          'index',
-        ])
+    router.group(() => {
+      router.get('venues', [
+        VenuesController,
+        'index',
+      ])
 
-        // Consultar local individual
-        router.get('venues/:id', [
-          VenuesController,
-          'show',
-        ])
-      })
+      router.get('venues/:id', [
+        VenuesController,
+        'show',
+      ])
+    })
 
     /*
     |--------------------------------------------------------------------------
@@ -321,19 +323,16 @@ router
 
     router
       .group(() => {
-        // Cadastrar local
         router.post('venues', [
           VenuesController,
           'store',
         ])
 
-        // Atualizar local
         router.put('venues/:id', [
           VenuesController,
           'update',
         ])
 
-        // Desativar local sem excluir o registro
         router.delete('venues/:id', [
           VenuesController,
           'destroy',
@@ -347,14 +346,12 @@ router
     |--------------------------------------------------------------------------
     */
 
-    router
-      .group(() => {
-        // Listar artistas associados a um evento
-        router.get('events/:eventId/artists', [
-          EventArtistsController,
-          'index',
-        ])
-      })
+    router.group(() => {
+      router.get('events/:eventId/artists', [
+        EventArtistsController,
+        'index',
+      ])
+    })
 
     /*
     |--------------------------------------------------------------------------
@@ -364,19 +361,16 @@ router
 
     router
       .group(() => {
-        // Associar artista a um evento
         router.post('events/:eventId/artists', [
           EventArtistsController,
           'store',
         ])
 
-        // Atualizar dados da apresentação
         router.put('event-artists/:eventArtistId', [
           EventArtistsController,
           'update',
         ])
 
-        // Remover artista do evento
         router.delete('event-artists/:eventArtistId', [
           EventArtistsController,
           'destroy',
@@ -384,66 +378,153 @@ router
       })
       .use(middleware.auth())
 
-      /*
-      |--------------------------------------------------------------------------
-      | Public Genres
-      |--------------------------------------------------------------------------
-      */
+    /*
+    |--------------------------------------------------------------------------
+    | Public Genres
+    |--------------------------------------------------------------------------
+    */
 
-      router
-        .group(() => {
-          // Listar gêneros musicais
-          router.get('genres', [GenresController, 'index'])
+    router.group(() => {
+      router.get('genres', [
+        GenresController,
+        'index',
+      ])
 
-          // Consultar gênero específico
-          router.get('genres/:id', [GenresController, 'show'])
-        })
+      router.get('genres/:id', [
+        GenresController,
+        'show',
+      ])
+    })
 
-        /*
-|--------------------------------------------------------------------------
-| Notifications
-|--------------------------------------------------------------------------
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications
+    |--------------------------------------------------------------------------
+    */
 
-router
-  .group(() => {
-    // Listar notificações
-    router.get('notifications', [
-      NotificationsController,
-      'index',
-    ])
+    router
+      .group(() => {
+        router.get('notifications', [
+          NotificationsController,
+          'index',
+        ])
 
-    // Contar notificações não lidas
-    router.get('notifications/unread-count', [
-      NotificationsController,
-      'unreadCount',
-    ])
+        router.get('notifications/unread-count', [
+          NotificationsController,
+          'unreadCount',
+        ])
 
-    // Consultar notificação específica
-    router.get('notifications/:id', [
-      NotificationsController,
-      'show',
-    ])
+        router.get('notifications/:id', [
+          NotificationsController,
+          'show',
+        ])
 
-    // Marcar uma notificação como lida
-    router.patch('notifications/:id/read', [
-      NotificationsController,
-      'markAsRead',
-    ])
+        router.patch('notifications/:id/read', [
+          NotificationsController,
+          'markAsRead',
+        ])
 
-    // Marcar todas as notificações como lidas
-    router.patch('notifications/read-all', [
-      NotificationsController,
-      'markAllAsRead',
-    ])
+        router.patch('notifications/read-all', [
+          NotificationsController,
+          'markAllAsRead',
+        ])
 
-    // Excluir notificação
-    router.delete('notifications/:id', [
-      NotificationsController,
-      'destroy',
-    ])
-  })
-  .use(middleware.auth())
-        
+        router.delete('notifications/:id', [
+          NotificationsController,
+          'destroy',
+        ])
+      })
+      .use(middleware.auth())
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Devices
+    |--------------------------------------------------------------------------
+    */
+
+    router
+      .group(() => {
+        router.get('user-devices', [
+          UserDevicesController,
+          'index',
+        ])
+
+        router.get('user-devices/:id', [
+          UserDevicesController,
+          'show',
+        ])
+
+        router.post('user-devices', [
+          UserDevicesController,
+          'store',
+        ])
+
+        router.put('user-devices/:id', [
+          UserDevicesController,
+          'update',
+        ])
+
+        router.delete('user-devices/:id', [
+          UserDevicesController,
+          'destroy',
+        ])
+      })
+      .use(middleware.auth())
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reports
+    |--------------------------------------------------------------------------
+    */
+
+    router
+      .group(() => {
+        // Registrar denúncia
+        router.post('reports', [
+          ReportsController,
+          'store',
+        ])
+
+        // Listar denúncias (admin)
+        router.get('reports', [
+          ReportsController,
+          'index',
+        ])
+
+        // Consultar denúncia (admin)
+        router.get('reports/:id', [
+          ReportsController,
+          'show',
+        ])
+
+        // Atualizar status da denúncia (admin)
+        router.patch('reports/:id/status', [
+          ReportsController,
+          'updateStatus',
+        ])
+      })
+      .use(middleware.auth())
+
+    /*
+    |--------------------------------------------------------------------------
+    | Moderation Logs
+    |--------------------------------------------------------------------------
+    */
+
+    router
+      .group(() => {
+        // Listar registros de moderação (admin)
+        router.get('moderation-logs', [
+          ModerationLogsController,
+          'index',
+        ])
+
+        // Consultar registro de moderação (admin)
+        router.get('moderation-logs/:id', [
+          ModerationLogsController,
+          'show',
+        ])
+      })
+      .use(middleware.auth())
   })
   .prefix('/api/v1')

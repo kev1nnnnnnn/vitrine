@@ -85,4 +85,21 @@ export interface ApiDefinition {
     markAllAsRead: typeof routes['notifications.mark_all_as_read']
     destroy: typeof routes['notifications.destroy']
   }
+  userDevices: {
+    index: typeof routes['user_devices.index']
+    show: typeof routes['user_devices.show']
+    store: typeof routes['user_devices.store']
+    update: typeof routes['user_devices.update']
+    destroy: typeof routes['user_devices.destroy']
+  }
+  reports: {
+    store: typeof routes['reports.store']
+    index: typeof routes['reports.index']
+    show: typeof routes['reports.show']
+    updateStatus: typeof routes['reports.update_status']
+  }
+  moderationLogs: {
+    index: typeof routes['moderation_logs.index']
+    show: typeof routes['moderation_logs.show']
+  }
 }

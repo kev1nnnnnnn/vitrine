@@ -645,6 +645,149 @@ export interface Registry {
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/notifications_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'user_devices.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/user-devices'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['index']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['index']>>>
+    }
+  }
+  'user_devices.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/user-devices/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/user_device').showUserDeviceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['show']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'user_devices.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/user-devices'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/user_device').createUserDeviceValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/user_device').createUserDeviceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'user_devices.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/user-devices/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/user_device').updateUserDeviceValidator)>|InferInput<(typeof import('#validators/user_device').showUserDeviceValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/user_device').updateUserDeviceValidator)>|InferInput<(typeof import('#validators/user_device').showUserDeviceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'user_devices.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/user-devices/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/user_device').showUserDeviceValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/user_device').showUserDeviceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/user_devices_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'reports.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/reports'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/report').createReportValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/report').createReportValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'reports.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/reports'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['index']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['index']>>>
+    }
+  }
+  'reports.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/reports/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['show']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['show']>>>
+    }
+  }
+  'reports.update_status': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/reports/:id/status'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/report').updateReportStatusValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/report').updateReportStatusValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['updateStatus']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['updateStatus']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/reports_controller').default['updateStatus']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'moderation_logs.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/moderation-logs'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/moderation_logs_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/moderation_logs_controller').default['index']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/moderation_logs_controller').default['index']>>>
+    }
+  }
+  'moderation_logs.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/moderation-logs/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/moderation_logs_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/moderation_logs_controller').default['show']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/moderation_logs_controller').default['show']>>>
+    }
+  }
 }
 
 export namespace Route {

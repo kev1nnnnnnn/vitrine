@@ -302,6 +302,72 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"notifications"],[1,"id"]],
     types: placeholder as Registry['notifications.destroy']['types'],
   },
+  'user_devices.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/user-devices',
+    tokens: [[0,"api"],[0,"v1"],[0,"user-devices"]],
+    types: placeholder as Registry['user_devices.index']['types'],
+  },
+  'user_devices.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/user-devices/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"user-devices"],[1,"id"]],
+    types: placeholder as Registry['user_devices.show']['types'],
+  },
+  'user_devices.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/user-devices',
+    tokens: [[0,"api"],[0,"v1"],[0,"user-devices"]],
+    types: placeholder as Registry['user_devices.store']['types'],
+  },
+  'user_devices.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/user-devices/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"user-devices"],[1,"id"]],
+    types: placeholder as Registry['user_devices.update']['types'],
+  },
+  'user_devices.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/user-devices/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"user-devices"],[1,"id"]],
+    types: placeholder as Registry['user_devices.destroy']['types'],
+  },
+  'reports.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/reports',
+    tokens: [[0,"api"],[0,"v1"],[0,"reports"]],
+    types: placeholder as Registry['reports.store']['types'],
+  },
+  'reports.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/reports',
+    tokens: [[0,"api"],[0,"v1"],[0,"reports"]],
+    types: placeholder as Registry['reports.index']['types'],
+  },
+  'reports.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/reports/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"reports"],[1,"id"]],
+    types: placeholder as Registry['reports.show']['types'],
+  },
+  'reports.update_status': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/reports/:id/status',
+    tokens: [[0,"api"],[0,"v1"],[0,"reports"],[1,"id"],[0,"status"]],
+    types: placeholder as Registry['reports.update_status']['types'],
+  },
+  'moderation_logs.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/moderation-logs',
+    tokens: [[0,"api"],[0,"v1"],[0,"moderation-logs"]],
+    types: placeholder as Registry['moderation_logs.index']['types'],
+  },
+  'moderation_logs.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/moderation-logs/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"moderation-logs"],[1,"id"]],
+    types: placeholder as Registry['moderation_logs.show']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }
